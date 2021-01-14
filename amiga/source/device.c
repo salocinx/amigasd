@@ -73,15 +73,11 @@ struct ExecBase *SysBase;
 
 /* Disk change interrupt handling */
 
-#define CLEARINT        SetICR(ciabase, CIAICRF_FLG)
-#define DISABLEINT      AbleICR(ciabase, CIAICRF_FLG)
-#define ENABLEINT       AbleICR(ciabase, CIAICRF_FLG | CIAICRF_SETCLR)
-
 extern void DiskInt();  							// Prototype for asm interrupt server.
 struct Library *ciabase;							// Base library for handling Amiga CIA chips.
 struct Interrupt *hw_int;							// Hardware interrupt to detect changes at ACK/FLG line.
-struct Interrupt *sw_int = NULL;					// Software interrupt to be triggered when ACK/FLG hardware interrupt was triggered (notifies DOS to ask for TD_CHANGESTATE).
-volatile ULONG disk_state = 0;						// Current disk state {0 = disk present, 1 = disk not present}
+struct Interrupt *sw_int = NULL;						// Software interrupt to be triggered when ACK/FLG hardware interrupt was triggered (Amiga will subsequently ask for TD_CHANGESTATE).
+volatile ULONG disk_state = 0;							// Current disk state {0 = disk present, 1 = disk not present}
 
 static void hw_isr() 
 {
